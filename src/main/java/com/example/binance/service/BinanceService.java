@@ -5,26 +5,56 @@ import com.example.binance.model.CurrencyResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
-
 @Service
 public class BinanceService {
 
-    public CurrencyResponse getCurrencyPrice(CurrencyRequest request) {
-        String symbol = request.getCurrencySymbol();
-        String url = "https://api.binance.com/api/v3/ticker/price?symbol=" + symbol;
+    private static final String BINANCE_API_URL = "https://api.binance.com/api/v3/ticker/price?symbol=";
 
+    public CurrencyResponse getCurrencyPrice(CurrencyRequest request) {
+        String currencySymbol = request.getCurrencySymbol();
+        double price = fetchPriceFromBinance(currencySymbol);
+
+        return new CurrencyResponse("Price fetched successfully", price);
+    }
+
+    public double getCurrencyPrice(String currencySymbol) {
+        return fetchPriceFromBinance(currencySymbol);
+    }
+
+    private double fetchPriceFromBinance(String currencySymbol) {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            // Wysyłanie zapytania do Binance API
-            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+            String url = BINANCE_API_URL + currencySymbol.toUpperCase();
+            BinanceApiResponse response = restTemplate.getForObject(url, BinanceApiResponse.class);
 
-            // Pobieranie ceny z odpowiedzi API
-            double price = Double.parseDouble((String) response.get("price"));
-            return new CurrencyResponse("Price fetched successfully", price);
+            if (response != null && response.getPrice() != null) {
+                return Double.parseDouble(response.getPrice());
+            } else {
+                throw new RuntimeException("Failed to fetch price for: " + currencySymbol);
+            }
         } catch (Exception e) {
-            // Obsługa błędów, np. gdy symbol waluty jest nieprawidłowy
-            return new CurrencyResponse("Error fetching price: " + e.getMessage(), 0.0);
+            throw new RuntimeException("Error while fetching price for " + currencySymbol + ": " + e.getMessage());
+        }
+    }
+
+    static class BinanceApiResponse {
+        private String symbol;
+        private String price;
+
+        public String getSymbol() {
+            return symbol;
+        }
+
+        public void setSymbol(String symbol) {
+            this.symbol = symbol;
+        }
+
+        public String getPrice() {
+            return price;
+        }
+
+        public void setPrice(String price) {
+            this.price = price;
         }
     }
 }

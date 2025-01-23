@@ -11,10 +11,10 @@ public class CurrencyRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String currencySymbol;
     private String userName;
 
-    // Gettery i settery
     public Long getId() {
         return id;
     }

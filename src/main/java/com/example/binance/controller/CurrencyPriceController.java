@@ -21,18 +21,24 @@ public class CurrencyPriceController {
         this.currencyRequestRepository = currencyRequestRepository;
     }
 
-    @PostMapping(value = "/get-current-currency-price", consumes = "application/json", produces = "application/json")
+    @PostMapping("/get-current-currency-price")
     public ResponseEntity<CurrencyResponse> getCurrencyPrice(@RequestBody CurrencyRequest request) {
-        if (request.getCurrencySymbol() == null || request.getCurrencySymbol().isEmpty()) {
-            return ResponseEntity.badRequest().body(new CurrencyResponse("Currency symbol is required", 0.0));
-        }
         try {
             CurrencyResponse response = binanceService.getCurrencyPrice(request);
             currencyRequestRepository.save(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new CurrencyResponse("Error: " + e.getMessage(), 0.0));
+            return ResponseEntity.badRequest().body(new CurrencyResponse("Error: " + e.getMessage(), 0.0));
         }
+    }
+
+    @PostMapping(value = "/save", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<String> saveCurrencyRequest(@RequestBody CurrencyRequest request) {
+        if (request.getCurrencySymbol() == null || request.getUserName() == null) {
+            return ResponseEntity.badRequest().body("Invalid input data");
+        }
+        currencyRequestRepository.save(request);
+        return ResponseEntity.ok("Request saved successfully");
     }
 
     @GetMapping("/requests")

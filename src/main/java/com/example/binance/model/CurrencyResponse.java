@@ -1,6 +1,7 @@
 package com.example.binance.model;
 
 public class CurrencyResponse {
+
     private String message;
     private double price;
 
@@ -9,7 +10,6 @@ public class CurrencyResponse {
         this.price = price;
     }
 
-    // Gettery i settery
     public String getMessage() {
         return message;
     }
