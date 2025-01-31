@@ -5,11 +5,13 @@ public class CurrencyResponse {
     private String message;
     private double price;
 
+    // Konstruktor
     public CurrencyResponse(String message, double price) {
         this.message = message;
         this.price = price;
     }
 
+    // Gettery i settery
     public String getMessage() {
         return message;
     }
