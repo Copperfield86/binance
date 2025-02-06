@@ -1,34 +1,29 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.0' // Wersja Spring Boot
-    id 'io.spring.dependency-management' version '1.1.0' // Zarządzanie zależnościami
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group = 'com.example'
 version = '1.0-SNAPSHOT'
-sourceCompatibility = '17' // Wersja Java
+sourceCompatibility = '17'
 
 repositories {
-    mavenCentral() // Repozytorium Maven Central
+    mavenCentral()
 }
 
 dependencies {
-    // Spring Boot Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    // Spring Boot Data JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    // Baza danych H2 (do testów)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     runtimeOnly 'com.h2database:h2'
-
-    // Jackson (do parsowania JSON)
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
-
-    // Spring Boot Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-    useJUnitPlatform() // Użyj JUnit do testów
+    useJUnitPlatform()
 }

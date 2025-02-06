@@ -28,6 +28,7 @@ public class CurrencyPriceController {
     @PostMapping("/get-current-currency-price")
     public ResponseEntity<CurrencyResponse> getCurrencyPrice(@RequestBody CurrencyRequest request) {
         try {
+            System.out.println("Fetching price for symbol: " + request.getCurrencySymbol()); // Logowanie
             double price = binanceService.getCurrencyPrice(request.getCurrencySymbol());
             currencyRequestRepository.save(request);
             return ResponseEntity.ok(new CurrencyResponse("Price fetched successfully", price));
